@@ -15,6 +15,7 @@
             background-color: #000;
             color: #fff;
             font-family: 'Arial', sans-serif;
+            flex-direction: column;
         }
 
         .timer-container {
@@ -54,6 +55,14 @@
             font-size: 14px;
             margin-top: 5px;
         }
+
+        .finished-message {
+            display: none;
+            font-size: 30px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #ff4444;
+        }
     </style>
 </head>
 <body>
@@ -74,10 +83,14 @@
             </div>
         </div>
     </div>
+    <div class="finished-message" id="finishedMessage">🚨 الوقت انتهى! 🚨</div>
+    
+    <!-- صوت التنبيه -->
+    <audio id="alarmSound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
 
     <script>
-        let totalTimeInSeconds = 3600; // ساعة واحدة
-
+        let totalTimeInSeconds = 10; // مؤقت 10 ثواني لاختبار الصوت (يمكن تغييره)
+        
         function updateTimerDisplay() {
             const hours = Math.floor(totalTimeInSeconds / 3600);
             const minutes = Math.floor((totalTimeInSeconds % 3600) / 60);
@@ -89,10 +102,14 @@
         }
 
         function startTimer() {
-            setInterval(() => {
+            let timerInterval = setInterval(() => {
                 if (totalTimeInSeconds > 0) {
                     totalTimeInSeconds--;
                     updateTimerDisplay();
+                } else {
+                    clearInterval(timerInterval);
+                    document.getElementById('finishedMessage').style.display = "block"; // عرض رسالة "الوقت انتهى"
+                    document.getElementById('alarmSound').play(); // تشغيل صوت التنبيه
                 }
             }, 1000);
         }
