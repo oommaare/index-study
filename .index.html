@@ -12,14 +12,13 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #000;
-            color: #fff;
+            background-color: #000; /* خلفية سوداء مثل الصورة */
+            color: #fff; /* اللون الأبيض للنص */
             font-family: 'Arial', sans-serif;
-            flex-direction: column;
         }
 
         .timer-container {
-            background-color: #333;
+            background-color: #333333; /* لون صندوق المؤقت */
             padding: 20px;
             border-radius: 10px;
             text-align: center;
@@ -27,53 +26,32 @@
         }
 
         .timer-title {
-            font-size: 24px;
-            font-weight: bold;
+            font-size: 20px; /* حجم النص العلوي */
             margin-bottom: 10px;
         }
 
         .time-display {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 10px; /* المسافة بين الأرقام */
         }
 
         .time-box {
-            background-color: #444;
-            padding: 20px;
+            background-color: #444444; /* لون خلفية المربعات */
+            padding: 20px 10px;
             border-radius: 5px;
             width: 100px;
             text-align: center;
         }
 
         .time-box .number {
-            font-size: 40px;
+            font-size: 40px; /* حجم الأرقام */
             font-weight: bold;
         }
 
         .time-box .label {
-            font-size: 14px;
+            font-size: 14px; /* حجم النصوص السفلية */
             margin-top: 5px;
-        }
-
-        .finished-message {
-            display: none;
-            font-size: 30px;
-            font-weight: bold;
-            margin-top: 20px;
-            color: #ff4444;
-        }
-
-        .start-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 18px;
-            font-weight: bold;
-            background-color: #ff4444;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
         }
     </style>
 </head>
@@ -82,7 +60,7 @@
         <div class="timer-title">Study :)</div>
         <div class="time-display">
             <div class="time-box">
-                <div class="number" id="hours">01</div>
+                <div class="number" id="hours">00</div>
                 <div class="label">HOUR</div>
             </div>
             <div class="time-box">
@@ -94,48 +72,42 @@
                 <div class="label">SECONDS</div>
             </div>
         </div>
-        <button class="start-button" onclick="startTimer()">ابدأ المؤقت</button>
     </div>
-    <div class="finished-message" id="finishedMessage">🚨 الوقت انتهى! 🚨</div>
-    
-    <!-- صوت التنبيه -->
-    <audio id="alarmSound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+
+    <!-- صوت الإنذار -->
+    <audio id="alarm-sound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
 
     <script>
-        let totalTimeInSeconds = 3600; // مؤقت ساعة كاملة (3600 ثانية)
-        let timerInterval;
-
-        function updateTimerDisplay() {
-            const hours = Math.floor(totalTimeInSeconds / 3600);
-            const minutes = Math.floor((totalTimeInSeconds % 3600) / 60);
-            const seconds = totalTimeInSeconds % 60;
-
-            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
-        }
+        // إعداد المؤقت
+        let totalTimeInSeconds = 3600; // ساعة واحدة (مثال)
 
         function startTimer() {
-            // تشغيل الصوت في البداية لجعل المتصفح يسمح به لاحقًا
-            document.getElementById('alarmSound').play().catch(() => {});
+            const hoursElement = document.getElementById('hours');
+            const minutesElement = document.getElementById('minutes');
+            const secondsElement = document.getElementById('seconds');
+            const alarmSound = document.getElementById('alarm-sound');
 
-            document.querySelector('.start-button').style.display = "none"; // إخفاء زر البدء
-            
-            timerInterval = setInterval(() => {
+            function updateTimer() {
+                const hours = Math.floor(totalTimeInSeconds / 3600);
+                const minutes = Math.floor((totalTimeInSeconds % 3600) / 60);
+                const seconds = totalTimeInSeconds % 60;
+
+                hoursElement.textContent = String(hours).padStart(2, '0');
+                minutesElement.textContent = String(minutes).padStart(2, '0');
+                secondsElement.textContent = String(seconds).padStart(2, '0');
+
                 if (totalTimeInSeconds > 0) {
                     totalTimeInSeconds--;
-                    updateTimerDisplay();
                 } else {
-                    clearInterval(timerInterval);
-                    document.getElementById('finishedMessage').style.display = "block"; // عرض رسالة "الوقت انتهى"
-                    document.getElementById('alarmSound').play(); // تشغيل صوت التنبيه
+                    clearInterval(timerInterval); // إيقاف المؤقت عند الصفر
+                    alarmSound.play(); // تشغيل الصوت
                 }
-            }, 1000);
+            }
+
+            const timerInterval = setInterval(updateTimer, 1000); // تحديث كل ثانية
         }
 
-        window.onload = function() {
-            updateTimerDisplay();
-        };
+        startTimer();
     </script>
 </body>
 </html>
