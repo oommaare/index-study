@@ -63,14 +63,26 @@
             margin-top: 20px;
             color: #ff4444;
         }
+
+        .start-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div class="timer-container">
-        <div class="timer-title">Study Timer</div>
+        <div class="timer-title">Study :)</div>
         <div class="time-display">
             <div class="time-box">
-                <div class="number" id="hours">00</div>
+                <div class="number" id="hours">01</div>
                 <div class="label">HOUR</div>
             </div>
             <div class="time-box">
@@ -82,6 +94,7 @@
                 <div class="label">SECONDS</div>
             </div>
         </div>
+        <button class="start-button" onclick="startTimer()">ابدأ المؤقت</button>
     </div>
     <div class="finished-message" id="finishedMessage">🚨 الوقت انتهى! 🚨</div>
     
@@ -89,8 +102,9 @@
     <audio id="alarmSound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
 
     <script>
-        let totalTimeInSeconds = 10; // مؤقت 10 ثواني لاختبار الصوت (يمكن تغييره)
-        
+        let totalTimeInSeconds = 3600; // مؤقت ساعة كاملة (3600 ثانية)
+        let timerInterval;
+
         function updateTimerDisplay() {
             const hours = Math.floor(totalTimeInSeconds / 3600);
             const minutes = Math.floor((totalTimeInSeconds % 3600) / 60);
@@ -102,7 +116,12 @@
         }
 
         function startTimer() {
-            let timerInterval = setInterval(() => {
+            // تشغيل الصوت في البداية لجعل المتصفح يسمح به لاحقًا
+            document.getElementById('alarmSound').play().catch(() => {});
+
+            document.querySelector('.start-button').style.display = "none"; // إخفاء زر البدء
+            
+            timerInterval = setInterval(() => {
                 if (totalTimeInSeconds > 0) {
                     totalTimeInSeconds--;
                     updateTimerDisplay();
@@ -115,7 +134,6 @@
         }
 
         window.onload = function() {
-            startTimer();
             updateTimerDisplay();
         };
     </script>
